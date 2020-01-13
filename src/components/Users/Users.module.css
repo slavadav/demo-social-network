@@ -1,0 +1,38 @@
+.users {
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+}
+
+.userItems {
+    padding: 10px;
+}
+
+.user a {
+    text-decoration: none;
+}
+
+.user .activeLink {
+    color: gold;
+}
+
+.userPhoto {
+    width: 50px;
+    height: 50px;
+    border-radius: 30px;
+}
+
+.messages {
+    padding: 10px;
+}
+
+textarea {
+    margin: 20px;
+}
+
+.selectedPage {
+    font-weight: bold;
+} 
+
+span {
+    cursor: pointer;
+}
