@@ -1,8 +1,10 @@
 import { profileAPI } from '../api/api'
+import { stopSubmit } from 'redux-form'
 
 const ADD_POST = 'ADD_POST'
 const SET_PROFILE = 'SET_PROFILE'
 const SET_STATUS = 'SET_STATUS'
+const SAVE_PHOTO_SUCCESS = 'SAVE_PHOTO_SUCCESS'
 const DELETE_POST = 'DELETE_POST'
 
 const initialState = {
@@ -26,6 +28,11 @@ const profileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 status: action.status
+            }
+        case SAVE_PHOTO_SUCCESS:
+            return {
+                ...state,
+                profile: {...state.profile, photos: action.photos}
             }
         case DELETE_POST: 
             return {
@@ -51,6 +58,7 @@ const profileReducer = (state = initialState, action) => {
 
 export const setProfile = (profile) => ({ type: 'SET_PROFILE', profile})
 export const setStatus = (status) => ({ type: 'SET_STATUS', status})
+export const savePhotoSuccess = (photos) => ({ type: 'SAVE_PHOTO_SUCCESS', photos})
 export const addPostActionCreator = (newPostText) => ({ type: 'ADD_POST', newPostText })
 export const deletePost = (postId) => ({ type: 'DELETE_POST', postId })
 
@@ -76,6 +84,31 @@ export const updateStatus = (status) => {
             .then((res) => {
                 if (res.data.resultCode === 0) { 
                     dispatch(setStatus(status))
+                }
+            })
+    }
+}
+export const savePhoto = (photo) => {
+    return (dispatch) => {
+        profileAPI.savePhoto(photo)
+            .then((res) => {
+                if (res.data.resultCode === 0) { 
+                    dispatch(savePhotoSuccess(res.data.data.photos))
+                }
+            })
+    }
+}
+export const saveProfile = (profileData) => {
+    return (dispatch, getState) => {
+        const userId = getState().authReducer.id
+        return profileAPI.saveProfile(profileData)
+            .then((res) => {
+                if (res.data.resultCode === 0) { 
+                    dispatch(getProfile(userId))
+                } else {
+                    const errorMessage = res.data.messages.length > 0 ? res.data.messages[0] : 'Invalid profile info input'
+                    dispatch(stopSubmit('profile-info', {_error: errorMessage}))
+                    return Promise.reject(res.data.messages[0])
                 }
             })
     }

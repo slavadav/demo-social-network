@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, withRouter, BrowserRouter } from 'react-router-dom'
+import { Route, withRouter, HashRouter } from 'react-router-dom'
 import { connect, Provider } from 'react-redux'
 import { compose } from 'redux'
 import './App.css'
@@ -54,11 +54,11 @@ const AppContainer = compose(
 }))(App)
 
 const MainApp = () => (
-  <BrowserRouter>
+  <HashRouter>
         <Provider store={store}>
             <AppContainer />
         </Provider>
-    </BrowserRouter>
+    </HashRouter>
 )
 
 export default MainApp

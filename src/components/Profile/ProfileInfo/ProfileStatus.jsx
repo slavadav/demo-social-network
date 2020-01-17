@@ -27,16 +27,20 @@ const ProfileStatus = (props) =>  {
     return (
         
         <div>
-            {editMode ? 
-            <div>
-                <input type="text" autoFocus={true}
-                    onBlur={deactivateEditMode}
-                    onChange={onStatusChange}
-                    value={status}/>
-            </div> : 
-            <div>
-                <span onDoubleClick={activateEditMode}>{props.status || '-----'}</span>                    
-            </div>}
+            {props.isOwner 
+                ? (editMode 
+                    ? <div>
+                        <input type="text" autoFocus={true}
+                            onBlur={deactivateEditMode}
+                            onChange={onStatusChange}
+                            value={status}/>
+                    </div>
+                    : <div>
+                        <span onDoubleClick={activateEditMode}>{props.status || '-----'}</span>                    
+                    </div>)
+                : <div>
+                    <span>{props.status || '-----'}</span>                    
+            </div>}   
         </div>
     )
 }
