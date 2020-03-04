@@ -15,6 +15,5 @@ export default compose(
         return {
             isAuth: state.authReducer.isAuth,
             login: state.authReducer.login
-        }}, {
-            logout
-        }))(HeaderContainer)
+        }
+    }, { logout }))(HeaderContainer)

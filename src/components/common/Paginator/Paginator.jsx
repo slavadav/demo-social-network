@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import s from './Paginator.module.css'
 
 const Paginator = ({totalItemsCount, pageSize, currentPage, onChangePage, portionSize = 10, }) => {
     let pagesAmount = Math.ceil(totalItemsCount / pageSize)
@@ -13,20 +12,32 @@ const Paginator = ({totalItemsCount, pageSize, currentPage, onChangePage, portio
     const [portionNumber, setPortionNumber] = useState(1)
     const leftPortionPageNumber = (portionNumber - 1) * portionSize + 1
     const rightPortionPageNumber = portionNumber * portionSize
-    //debugger
+
     return (
-        <div className={s.paginator}>
-            <button onClick={ () => { setPortionNumber(portionNumber - 1) } }
-                    disabled={ portionNumber <= 1 }>PREV</button>
+        <ul className="pagination pagination-sm">
+            <li className={ portionNumber <= 1 ? "page-item disabled" : "page-item"}>
+                <button onClick={ () => { setPortionNumber(portionNumber - 1) } }
+                        className="page-link" key="p">
+                    <span>PREV</span>
+                </button>
+            </li>
             {pages
                 .filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
                 .map(p => {
-                    return <span className={currentPage === p ? s.selectedPage : s.pageNumber}
-                    onClick={ (e) => {onChangePage(p)} } key={p}>{p}</span>
+                    return (
+                        <li className={currentPage === p ? "page-item active" : "page-item"} key={p}>
+                            <button onClick={ (e) => {onChangePage(p)} } className="page-link">
+                                {p}
+                            </button>
+                        </li>)
             })}
-            <button onClick={ () => { setPortionNumber(portionNumber + 1) } }
-                    disabled={ portionNumber >= portionCount }>NEXT</button>
-        </div>
+            <li className={ portionNumber >= portionCount ? "page-item disabled" : "page-item" }>
+                <button onClick={ () => { setPortionNumber(portionNumber + 1) } }
+                        className="page-link" key="n">
+                        <span>NEXT</span>
+                </button>
+            </li>
+        </ul>
     )
 }
 

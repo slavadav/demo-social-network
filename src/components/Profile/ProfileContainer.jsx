@@ -2,7 +2,6 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
-import s from './Profile.module.css'
 import Profile from './Profile'
 import { getProfile, getStatus, updateStatus, savePhoto, saveProfile } from '../../redux/profile-reducer'
 import { withAuthRedirect } from '../../hoc/withAuthRedirect'
@@ -33,8 +32,8 @@ class ProfileContainer extends React.Component {
 
     render() {
         return (
-            <div className={s.content}>
-                <Profile { ...this.props } isOwner={this.props.authUserId}/>
+            <div>
+                <Profile { ...this.props }/>
             </div>
         )
     }

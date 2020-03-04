@@ -1,12 +1,11 @@
 import React from 'react'
-import s from './Post.module.css'
+import icon from '../../../../assets/images/icon.png'
 
 const Post = (props) => {
     return (
-        <div key={props.id} className={s.item}>
-            <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2ktlwSh8RQGskNFUfNSyfHZYLe-Duiu8BgQMb3JEw9uLV7KpbmA&s'  alt='some value'/>
-            {props.post} 
-            <span> {props.likes} likes</span>
+        <div key={props.id}>
+            <img src={icon} className="user-icon" alt='...'/> 
+            <span className="pl-1">{props.post}</span>
         </div>
     )
 }

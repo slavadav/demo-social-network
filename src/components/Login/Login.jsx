@@ -4,32 +4,48 @@ import {connect} from 'react-redux'
 import { compose } from 'redux'
 import { Redirect } from 'react-router-dom'
 import { login } from '../../redux/auth-reducer'
-import { Input, createField } from '../common/FormsControls/FormsControls'
+import { Field } from 'redux-form'
+import { Input } from '../common/FormsControls/FormsControls'
 import { required } from '../../utils/validators/validators'
 
-const LoginForm = ({handleSubmit, error}) => {
+const LoginForm = ({handleSubmit, error, captchaUrl}) => {
     return (
-        <form onSubmit={handleSubmit}>
-            {createField(Input, "email", "E-mail", [required])}
-            {createField(Input, "password", "Password", [required], {type: "password"})}
-            {createField("input", "rememberMe", null, [], {type: "checkbox"}, 'Remember me')}
-            {/* <div>
-                <Field type="input" placeholder={"E-mail"}
-                component={Input} name={"email"}
-                validate={[required]} />
+        <form onSubmit={handleSubmit} >
+            <div className="form-group row">
+                <div  className="col-sm-4">
+                    <Field type="input" placeholder={"E-mail"}
+                    component={Input} name={"email"}
+                    validate={[required]} className="form-control"/>
+                </div>
+                <div>
+                    <Field type={"password"} placeholder={"Password"} 
+                    component={Input} name={"password"} 
+                    validate={[required]} className="form-control" />
+                </div>
             </div>
             <div>
-                <Field type={"password"} placeholder={"Password"} 
-                component={Input} name={"password"} 
-                validate={[required]}/>
+                <button className="btn btn-sm btn-secondary">Login</button>
             </div>
-            <div>
-                <Field type={"checkbox"} component={"input"} name={"rememberMe"} /> Remember me
-            </div> */}
+            <div className="form-check mt-2">
+                <Field type={"checkbox"} 
+                       component={"input"} 
+                       name={"rememberMe"}
+                       className="form-check-input" id="gridCheck" />
+                <label className="form-check-label" htmlFor="gridCheck">
+                    Remember me
+                </label>
+            </div>
+            {captchaUrl && <img src={captchaUrl} alt=""/>}
+            {captchaUrl && 
+                <div className="row">
+                    <div className="col-2">
+                        <Field type={"input"} 
+                                component={Input} name={"captcha"} 
+                                validate={[required]} className="form-control" />
+                    </div>
+                    <span className="col-6" >Input symbols</span>
+                </div>}
             {error && <div>{error}</div>}
-            <div>
-                <button>Login</button>
-            </div>
         </form>
     )
 }
@@ -48,7 +64,7 @@ const Login = (props) => {
     return (
         <div>
             <h1>Login</h1>
-            <LoginReduxForm onSubmit={onFormSubmit}/>
+            <LoginReduxForm onSubmit={onFormSubmit} captchaUrl={props.captchaUrl}/>
         </div>
     )
 }
@@ -56,7 +72,7 @@ const Login = (props) => {
 export default compose(
     connect((state) => {
         return {
-            isAuth: state.authReducer.isAuth
+            isAuth: state.authReducer.isAuth,
+            captchaUrl: state.authReducer.captchaUrl
         }
-    }, { login }
-    ))(Login)
+    }, { login }))(Login)

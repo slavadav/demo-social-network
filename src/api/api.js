@@ -55,15 +55,10 @@ export const profileAPI = {
 export const authAPI = {
     auth() {
         return axiosInst.get('auth/me')
-        /* .then(res => {
-            if (res.data.resultCode === 0) {
-                return res.data.data
-            } else { throw new Error('Athorize, please')}
-        }) */
     },
     login(loginData) {
-        let {email, password, rememberMe} = loginData
-        return axiosInst.post('auth/login', {email, password, rememberMe})
+        let {email, password, rememberMe, captcha} = loginData
+        return axiosInst.post('auth/login', {email, password, rememberMe, captcha})
     },
     logout() {
         return axiosInst.delete('auth/login')
@@ -75,5 +70,8 @@ export const authAPI = {
     }
 }
 
-
-
+export const securityAPI = {
+    getCaptchaUrl() {
+        return axiosInst.get('security/get-captcha-url')
+    }
+}

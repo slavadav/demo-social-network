@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import s from './ProfileInfo.module.css'
 import icon from '../../../assets/images/icon.png'
 import Preloader from '../../common/Preloader/Preloader'
 import ProfileStatus from './ProfileStatus'
@@ -12,7 +11,7 @@ const ProfileInfo = ({profile, status, updateStatus, authUserId, savePhoto, save
     if (!profile) {
         return <Preloader />
     }
-
+    
     const isOwner = profile.userId === +authUserId
 
     const onMainPhotoSelected = (e) => {
@@ -22,17 +21,31 @@ const ProfileInfo = ({profile, status, updateStatus, authUserId, savePhoto, save
     }
 
     const onFormSubmit = (formData) => {
-        const res = saveProfile(formData)
+        saveProfile(formData)
             .then(() => {
                 setEditMode(false)
             })
     }
 
     return (
-        <div className={s.content}>            
-            <img src={profile.photos.large || icon} alt="" 
-                className={s.mainPhoto}/>
-            <div>{ isOwner && <input type={'file'} onChange={onMainPhotoSelected}/> }</div>
+        <div>
+            <div>
+                <img src={profile.photos.large || icon} alt="" 
+                    className="pl-2 pb-2" width="200"/>
+            </div>
+            { isOwner && <div className="custom-file row">
+                <input onChange={onMainPhotoSelected}
+                        type="file" className="custom-file-input" id="customFile" />
+                <label className="custom-file-label col-6" htmlFor="customFile">Choose file</label>
+            </div>}
+
+            <div className="pl-3">
+                <b>Status</b>: 
+                <ProfileStatus userId={profile.userId} 
+                                status={status}
+                                isOwner={isOwner}
+                                updateStatus={updateStatus} />
+            </div>
 
             {editMode 
                 ? <ProfileDataReduxForm onSubmit={onFormSubmit}
@@ -40,21 +53,13 @@ const ProfileInfo = ({profile, status, updateStatus, authUserId, savePhoto, save
                                         profile={profile}/>
                 : <ProfileData  profile={profile} 
                                     isOwner={isOwner}
-                                    goToEditMode={() => { setEditMode(true) }}/>}
-
-            <div className={s.discription}><b>Status</b>: 
-                <ProfileStatus userId={profile.userId} 
-                                status={status}
-                                isOwner={isOwner}
-                                updateStatus={updateStatus} />
-            </div>           
+                                    goToEditMode={() => { setEditMode(true) }}/>}           
         </div>
     )
 }
 
 const ProfileData = ({profile, isOwner, goToEditMode}) => {
-    return <div className={s.discription}>
-        { isOwner && <button onClick={goToEditMode}>Edit</button> }
+    return <div className="p-2">
         <div>
             <b>Full Name</b>: {profile.fullName}
         </div>
@@ -72,11 +77,13 @@ const ProfileData = ({profile, isOwner, goToEditMode}) => {
                 return <Contact key={key} contactTitle={key} contactValue={profile.contacts[key]}/>
             })}
         </div>
+        { isOwner && <button onClick={goToEditMode}
+                            className="btn btn-sm btn-secondary">Edit</button> }
     </div>
 }
 
 const Contact = ({contactTitle, contactValue}) => {
-    return <div className={s.contact}><b>{contactTitle}</b>: {contactValue}</div>
+    return <div className="pl-3"><b>{contactTitle}</b>: {contactValue}</div>
 }
 
 export default ProfileInfo

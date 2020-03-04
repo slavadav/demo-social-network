@@ -6,15 +6,18 @@ const SET_PROFILE = 'SET_PROFILE'
 const SET_STATUS = 'SET_STATUS'
 const SAVE_PHOTO_SUCCESS = 'SAVE_PHOTO_SUCCESS'
 const DELETE_POST = 'DELETE_POST'
+const UPDATE_POST = 'UPDATE_POST'
 
 const initialState = {
     profile: null,
     posts: [
+    {id: 0, post: 'No API for this App part', likesCount: 1},
     {id: 1, post: 'First post', likesCount: 12},
     {id: 2, post: 'Second post', likesCount: 13},
     {id: 3, post: 'Third post', likesCount: 11}
     ],
-    status: ''
+    status: '',
+    postText: ''
 }
 
 const profileReducer = (state = initialState, action) => {
@@ -41,16 +44,21 @@ const profileReducer = (state = initialState, action) => {
             }
         case ADD_POST: {
             const newPost = {
-                id: state.posts.length + 1,
-                post: action.newPostText,
+                id: Date.now(),
+                post: state.postText.trim(),
                 likesCount: 0
             }
             return {
                 ...state,
                 posts: [...state.posts, newPost],
-                newPostText: ''
+                postText: ''
             }
         }
+        case UPDATE_POST: 
+            return {
+                ...state,
+                postText: action.newPostText
+            }
         default: 
             return state
     } 
@@ -59,7 +67,8 @@ const profileReducer = (state = initialState, action) => {
 export const setProfile = (profile) => ({ type: 'SET_PROFILE', profile})
 export const setStatus = (status) => ({ type: 'SET_STATUS', status})
 export const savePhotoSuccess = (photos) => ({ type: 'SAVE_PHOTO_SUCCESS', photos})
-export const addPostActionCreator = (newPostText) => ({ type: 'ADD_POST', newPostText })
+export const addPostActionCreator = () => ({ type: 'ADD_POST' })
+export const updatePostActionCreator = (newPostText) => ({ type: 'UPDATE_POST', newPostText })
 export const deletePost = (postId) => ({ type: 'DELETE_POST', postId })
 
 export const getProfile = (userId) => {
@@ -78,14 +87,14 @@ export const getStatus = (userId) => {
             })
     }
 }
-export const updateStatus = (status) => {
-    return (dispatch) => {
-        profileAPI.updateStatus(status)
-            .then((res) => {
-                if (res.data.resultCode === 0) { 
-                    dispatch(setStatus(status))
-                }
-            })
+export const updateStatus = (status) =>  async (dispatch) => {
+    try {
+        const res = await profileAPI.updateStatus(status)
+        if (res.data.resultCode === 0) { 
+            dispatch(setStatus(status))
+        }
+    } catch(error) {
+        console.log(error)
     }
 }
 export const savePhoto = (photo) => {

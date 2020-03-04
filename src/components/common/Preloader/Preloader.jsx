@@ -1,10 +1,11 @@
 import React from 'react'
-import preloader from '../../../assets/images/loader.gif'
 
-const Preloader = (props) => {
-    return (
-        <img src={preloader}  alt='some value'/>
-    )
-}
+const Preloader = () => (
+    <div className="d-flex justify-content-center pt-5">
+        <div className="spinner-border" role="status">
+            <span className="sr-only">Loading...</span>
+        </div>
+    </div>
+)
 
 export default Preloader
